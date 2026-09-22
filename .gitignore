@@ -1,0 +1,8 @@
+# fabrica-renda-ia — deps e segredos nunca entram
+# (produtos/ e overnight/output/ ficam VERSIONADOS: são produtos gerados)
+node_modules/
+*.log
+.env
+.env.*
+__pycache__/
+.venv/
