@@ -44,7 +44,14 @@
   .compat { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 16px 0; }
   .compat span { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 0.78em; color: #475569; }
   .pix-info { background: #f3e8ff; border: 1px solid #d8b4fe; border-radius: 8px; padding: 12px; font-size: 0.85em; color: #581c87; margin: 8px 0; }
-  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 1.7em; } }
+  /* lapidação: reveal + contadores + hover */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .8s,transform .8s cubic-bezier(.2,.8,.2,1)}
+  .reveal.on{opacity:1;transform:none}
+  .prova-num{background:linear-gradient(90deg,#1e40af,#0891b2);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .grid > div{transition:transform .25s,border-color .25s,box-shadow .25s}
+  .grid > div:hover{transform:translateY(-3px);border-color:#a5b4fc;box-shadow:0 12px 30px -14px rgba(30,64,175,.35)}
+  @media (max-width:600px){.grid{grid-template-columns:1fr}h1{font-size:1.7em}}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -124,5 +131,17 @@ Você é um assistente especializado em Direito...
     <span>Ollama</span><span>Llama 3</span><span>Qualquer LLM</span>
   </div>
 </div>
+<script>
+(function(){
+  var els=document.querySelectorAll('.hero > *');
+  var o=('IntersectionObserver' in window)?new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');o.unobserve(e.target)}})},{threshold:.1}):null;
+  els.forEach(function(e){e.classList.add('reveal');if(o)o.observe(e);else e.classList.add('on')});
+  document.querySelectorAll('.prova-num').forEach(function(el){
+    var alvo=parseInt(el.textContent.replace(/\D/g,''),10);if(isNaN(alvo))return;
+    var t0=performance.now();
+    (function tick(t){var p=Math.min(1,(t-t0)/1400);el.textContent=String(Math.round(alvo*(1-Math.pow(1-p,3))));if(p<1)requestAnimationFrame(tick)})(t0);
+  });
+})();
+</script>
 </body>
 </html>
